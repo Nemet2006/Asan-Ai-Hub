@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="az">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JobSim AI MVP Demo</title>
+    <style>
+      :root {
+        --bg: #f4f6f5;
+        --surface: #ffffff;
+        --soft: #f8faf9;
+        --line: #dce3df;
+        --text: #17201d;
+        --muted: #65736f;
+        --teal: #117865;
+        --indigo: #3445a7;
+        --amber: #bc7a18;
+        --ink: #101828;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgba(17, 120, 101, 0.06) 1px, transparent 1px),
+          linear-gradient(rgba(52, 69, 167, 0.04) 1px, transparent 1px),
+          var(--bg);
+        background-size: 64px 64px;
+        color: var(--text);
+        font-family: Inter, Aptos, Segoe UI, Arial, sans-serif;
+      }
+      a { color: inherit; text-decoration: none; }
+      button, input, select, textarea { font: inherit; }
+      .wrap { width: min(1220px, calc(100% - 32px)); margin: 0 auto; }
+      .topbar {
+        position: sticky; top: 0; z-index: 5; padding: 14px 0;
+        backdrop-filter: blur(16px);
+      }
+      .nav {
+        display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center;
+        padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px;
+        background: rgba(255,255,255,.86);
+      }
+      .brand, .logo { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; }
+      .mark {
+        display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px;
+        background: var(--ink); color: #fff; font-weight: 900;
+      }
+      small, .muted, p { color: var(--muted); }
+      .brand small { display: block; margin-top: 3px; font-weight: 700; }
+      .links { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+      .links a, .btn, .ghost {
+        min-height: 42px; display: inline-flex; align-items: center; justify-content: center;
+        padding: 0 14px; border-radius: 8px; font-weight: 900; cursor: pointer;
+      }
+      .links a { color: var(--muted); }
+      .links a:hover { background: #edf3f1; color: var(--teal); }
+      .btn { border: 0; background: var(--teal); color: white; }
+      .ghost { border: 1px solid var(--line); background: white; color: var(--ink); }
+      .grid { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 18px; align-items: start; padding: 28px 0 54px; }
+      .sidebar, .panel, .kpi, .start, .case {
+        border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.94);
+        box-shadow: 0 18px 44px rgba(16,24,40,.08);
+      }
+      .sidebar { position: sticky; top: 92px; display: grid; gap: 20px; padding: 18px; }
+      .menu { display: grid; gap: 8px; }
+      .menu button {
+        padding: 12px; border: 0; border-radius: 8px; background: transparent; color: var(--muted);
+        text-align: left; font-weight: 900; cursor: pointer;
+      }
+      .menu button.active, .menu button:hover { background: #edf3f1; color: var(--ink); }
+      .note { display: grid; gap: 8px; padding: 14px; border-radius: 8px; background: var(--ink); color: white; }
+      .note p, .note span { color: rgba(255,255,255,.72); margin: 0; }
+      .main { display: grid; gap: 18px; }
+      .hero {
+        display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 18px; align-items: start;
+        padding: 24px; border: 1px solid var(--line); border-radius: 8px;
+        background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(238,246,244,.96));
+        box-shadow: 0 18px 44px rgba(16,24,40,.08);
+      }
+      h1 { margin: 0 0 12px; font-size: clamp(2.5rem, 5vw, 4.8rem); line-height: 1; }
+      h2 { margin: 0; font-size: clamp(1.45rem, 2.5vw, 2rem); }
+      h3 { margin: 0; }
+      p { line-height: 1.65; }
+      .eyebrow {
+        display: inline-flex; margin-bottom: 10px; padding: 7px 10px; border-radius: 8px;
+        background: #ecf7f4; color: var(--teal); font-size: .76rem; font-weight: 900; text-transform: uppercase;
+      }
+      .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+      .kpis, .roles, .cases, .feedback { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+      .kpi { min-height: 138px; display: grid; gap: 8px; padding: 18px; }
+      .kpi span, .case-card span, .row span { color: var(--muted); font-size: .82rem; font-weight: 900; }
+      .kpi strong { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+      .kpi.dark { background: var(--ink); color: white; }
+      .kpi.dark span, .kpi.dark small { color: rgba(255,255,255,.72); }
+      .split { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px,.82fr); gap: 18px; }
+      .panel { padding: 20px; }
+      .head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+      .rows, .scores, .insights { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+      .row, .insights li, .case-card, .role, .feedback-card {
+        border: 1px solid var(--line); border-radius: 8px; background: var(--soft); padding: 14px;
+      }
+      .row { display: grid; grid-template-columns: minmax(0,1fr) 160px 70px; gap: 12px; align-items: center; }
+      .meter { height: 9px; overflow: hidden; border-radius: 99px; background: #e3e9e6; }
+      .meter i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--teal), var(--indigo)); }
+      .visual { background: linear-gradient(135deg, rgba(16,24,40,.96), rgba(31,45,80,.96)); color: white; }
+      .visual p, .visual span { color: rgba(255,255,255,.72); }
+      .bars { height: 130px; display: flex; gap: 10px; align-items: end; padding: 14px; border-radius: 8px; background: rgba(255,255,255,.08); }
+      .bars i { flex: 1; border-radius: 6px 6px 0 0; background: #f0b35a; }
+      .roles { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .role { min-height: 170px; display: grid; gap: 16px; border-top: 4px solid var(--teal); }
+      .role:nth-child(2) { border-top-color: var(--indigo); }
+      .role:nth-child(3) { border-top-color: var(--amber); }
+      .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+      .tags small, .status { padding: 7px 9px; border-radius: 8px; background: #eef3f1; font-weight: 900; color: var(--ink); }
+      .cases, .feedback { grid-template-columns: repeat(4, minmax(0,1fr)); }
+      .case-card { display: grid; gap: 10px; }
+      .screen { display: none; }
+      .screen.active { display: grid; gap: 18px; }
+      .assessment { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 18px; align-items: start; }
+      .start { position: sticky; top: 92px; display: grid; gap: 16px; padding: 20px; }
+      label { display: grid; gap: 8px; color: var(--muted); font-weight: 900; }
+      input, select, textarea { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--text); }
+      .case { display: grid; gap: 16px; padding: 22px; }
+      .option { width: 100%; padding: 15px; border: 1px solid var(--line); border-radius: 8px; background: white; text-align: left; cursor: pointer; }
+      .option.active { border-color: var(--teal); background: #f2faf7; }
+      .report { display: none; gap: 18px; }
+      .report.active { display: grid; }
+      table { width: 100%; min-width: 880px; border-collapse: collapse; background: white; }
+      th, td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; }
+      th { background: #f2f5f3; color: var(--muted); font-size: .78rem; text-transform: uppercase; }
+      .table { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+      @media (max-width: 980px) {
+        .grid, .split, .hero, .assessment { grid-template-columns: 1fr; }
+        .sidebar, .start { position: static; }
+        .kpis, .cases, .feedback { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      }
+      @media (max-width: 680px) {
+        .nav, .roles, .kpis, .cases, .feedback, .row { grid-template-columns: 1fr; }
+        .links { justify-content: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap nav">
+        <a class="brand" href="#home"><span class="mark">JS</span><span>JobSim AI<small>AI job simulation platform</small></span></a>
+        <nav class="links"><a href="#home">Overview</a><a href="#assessment">Assessment</a><a href="#company">Company</a></nav>
+        <button class="btn" onclick="show('assessment')">Start</button>
+      </div>
+    </header>
+
+    <main class="wrap grid">
+      <aside class="sidebar">
+        <div class="logo"><span class="mark">JS</span><div><strong>JobSim AI</strong><small>Talent simulation OS</small></div></div>
+        <div class="menu">
+          <button class="active" onclick="show('home', this)">Overview</button>
+          <button onclick="show('assessment', this)">Candidate flow</button>
+          <button onclick="show('company', this)">Company dashboard</button>
+        </div>
+        <div class="note"><span>Live MVP demo</span><strong>4 case engine</strong><p>Candidate flow, scoring və company ranking bu faylda işləyir.</p></div>
+      </aside>
+
+      <section class="main">
+        <div id="home" class="screen active">
+          <section class="hero">
+            <div>
+              <span class="eyebrow">SaaS assessment dashboard</span>
+              <h1>JobSim AI</h1>
+              <p>CV əvəzinə real iş simulyasiyaları ilə junior namizədlərin kommunikasiya, problem həlli və rol-spesifik bacarıqlarını ölçən platforma.</p>
+            </div>
+            <div class="actions"><button class="ghost" onclick="show('company')">Company dashboard</button><button class="btn" onclick="show('assessment')">Assessment başlat</button></div>
+          </section>
+
+          <section class="kpis">
+            <article class="kpi"><span>Active campaigns</span><strong>2</strong><small>Support və Sales pilotları açıqdır</small></article>
+            <article class="kpi"><span>Completed simulations</span><strong>59</strong><small>Mock cohort nəticələri ranking-ə düşür</small></article>
+            <article class="kpi"><span>Average score</span><strong>73/100</strong><small>7 bacarıq üzrə ümumi orta</small></article>
+            <article class="kpi dark"><span>Top candidate</span><strong>Aysel Məmmədova</strong><small>Customer Support Intern</small></article>
+          </section>
+
+          <section class="split">
+            <article class="panel">
+              <div class="head"><div><span class="eyebrow">Company view</span><h2>Assessment campaigns</h2></div></div>
+              <div class="rows">
+                <div class="row"><div><strong>Customer Support Intern Assessment</strong><span>Customer Support Intern</span></div><div><span>31/42</span><div class="meter"><i style="width:74%"></i></div></div><small>24 May</small></div>
+                <div class="row"><div><strong>Sales Assistant Assessment</strong><span>Sales Assistant</span></div><div><span>19/28</span><div class="meter"><i style="width:68%"></i></div></div><small>27 May</small></div>
+                <div class="row"><div><strong>Data Analyst Trial Batch</strong><span>Data Analyst Intern</span></div><div><span>9/16</span><div class="meter"><i style="width:56%"></i></div></div><small>Draft</small></div>
+              </div>
+            </article>
+            <article class="panel visual">
+              <span>AI evaluation</span><h2>Structured JSON scoring</h2>
+              <p>Prompt version, rubric criteria, raw response və risk flags report üçün saxlanılır.</p>
+              <div class="bars"><i style="height:44px"></i><i style="height:58px"></i><i style="height:76px"></i><i style="height:92px"></i><i style="height:70px"></i><i style="height:84px"></i><i style="height:62px"></i></div>
+            </article>
+          </section>
+
+          <section class="panel">
+            <div class="head"><div><span class="eyebrow">Simulation catalog</span><h2>Rol əsaslı case engine</h2></div></div>
+            <div class="roles">
+              <article class="role"><span>10 case</span><h3>Customer Support Intern</h3><div class="tags"><small>Empatiya</small><small>Peşəkar ton</small><small>Eskalasiyalar</small></div></article>
+              <article class="role"><span>10 case</span><h3>Sales Assistant</h3><div class="tags"><small>Etirazların idarəsi</small><small>ROI dili</small><small>Follow-up</small></div></article>
+              <article class="role"><span>7 case</span><h3>Data Analyst Intern</h3><div class="tags"><small>Insight</small><small>Prioritet</small><small>Hesabat</small></div></article>
+            </div>
+          </section>
+        </div>
+
+        <div id="assessment" class="screen">
+          <section class="assessment" id="assessmentStart">
+            <div>
+              <span class="eyebrow">Candidate portal</span>
+              <h1>Real case assessment</h1>
+              <p>Namizəd case oxuyur, qərar variantı seçir və izah yazır. Demo rubric scoring ilə skill report yaradır.</p>
+              <div class="cases" id="casePreview"></div>
+            </div>
+            <div class="start">
+              <label>İştirakçı adı<input id="candidateName" value="Demo namizəd"></label>
+              <label>Hədəf rol<select id="candidateRole"><option>Customer Support Intern</option><option>Sales Assistant</option><option>Data Analyst Intern</option></select></label>
+              <button class="btn" onclick="startAssessment()">Assessment başlat</button>
+            </div>
+          </section>
+          <section class="case" id="caseRunner" style="display:none"></section>
+          <section class="report" id="report"></section>
+        </div>
+
+        <div id="company" class="screen">
+          <section class="hero">
+            <div><span class="eyebrow">Company dashboard</span><h1>AzerRetail junior hiring campaign</h1><p>Assessment nəticələri, AI recruiter summary, shortlist statusları və cohort skill trend-ləri.</p></div>
+            <button class="btn" onclick="window.print()">PDF export</button>
+          </section>
+          <section class="kpis">
+            <article class="kpi"><span>Invited candidates</span><strong>86</strong><small>3 rol üzrə dəvət göndərilib</small></article>
+            <article class="kpi"><span>Completion rate</span><strong>69%</strong><small>Invitation link tamamlanma nisbəti</small></article>
+            <article class="kpi"><span>Cohort average</span><strong id="cohortAvg">73/100</strong><small>Weighted skill average</small></article>
+            <article class="kpi dark"><span>Top candidate</span><strong id="topCandidate">Aysel Məmmədova</strong><small id="topScore">80/100 overall</small></article>
+          </section>
+          <article class="panel">
+            <div class="head"><div><span class="eyebrow">Ranking table</span><h2>Candidate comparison</h2></div></div>
+            <div class="table"><table><thead><tr><th>Candidate</th><th>Role</th><th>Status</th><th>Overall</th><th>Communication</th><th>Problem</th><th>Risk</th><th>Action</th></tr></thead><tbody id="ranking"></tbody></table></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const skills = ["communication","problemSolving","empathy","structure","businessThinking","actionOrientation","riskAwareness"];
+      const labels = {communication:"Kommunikasiya",problemSolving:"Problem həlli",empathy:"Empatiya",structure:"Struktur",businessThinking:"Biznes düşüncəsi",actionOrientation:"Növbəti addım",riskAwareness:"Risk nəzarəti"};
+      const cases = [
+        {title:"Gecikmiş çatdırılma və əsəbi müştəri", role:"Customer Support Intern", signal:"Empatiya, konkret update vaxtı və realist növbəti addım görünməlidir.", options:[
+          ["Bu gün çatdırılacağını söz ver",{actionOrientation:4,riskAwareness:-12,communication:-5,structure:-4}],
+          ["Məsuliyyəti qəbul et və update planı ver",{empathy:10,communication:9,actionOrientation:9,problemSolving:8,riskAwareness:7,structure:5}],
+          ["Logistikanı günahlandır",{empathy:-9,communication:-8,actionOrientation:-5,riskAwareness:-4}]
+        ]},
+        {title:"Qiymət etirazı və qərarsız lead", role:"Sales Assistant", signal:"Qiyməti ehtiyac, ROI, risk və növbəti görüş çərçivəsində idarə et.", options:[
+          ["Dərhal endirim təklif et",{actionOrientation:5,businessThinking:-9,riskAwareness:-6,structure:-3}],
+          ["Ümumi dəyər və risk müqayisəsi qur",{businessThinking:11,problemSolving:8,communication:7,riskAwareness:8,structure:7,empathy:3}],
+          ["Rəqibi zəif göstər",{communication:-7,empathy:-4,businessThinking:1,structure:-3}]
+        ]},
+        {title:"Refund tələbi və policy riski", role:"Customer Support Intern", signal:"Empatiya, fakt toplama, policy çərçivəsi və eskalasiya birlikdə görünməlidir.", options:[
+          ["Tam refund-u dərhal təsdiqlə",{empathy:6,actionOrientation:4,riskAwareness:-11,businessThinking:-6}],
+          ["Policy-yə istinad edib rədd et",{riskAwareness:4,empathy:-10,communication:-8,actionOrientation:-5}],
+          ["Empatiya qur, faktları topla və eskalasiya et",{empathy:10,communication:9,riskAwareness:9,problemSolving:7,structure:6,actionOrientation:6}]
+        ]},
+        {title:"Satış datasından qərar çıxarışı", role:"Data Analyst Intern", signal:"Hipotez, əlavə data və biznes qərarı üçün aydın analiz planı ver.", options:[
+          ["Birbaşa onboarding zəifdir de",{actionOrientation:3,problemSolving:-7,structure:-5,riskAwareness:-6}],
+          ["Hipotez və segment analiz planı qur",{problemSolving:11,structure:10,businessThinking:8,riskAwareness:7,communication:5,actionOrientation:6}],
+          ["Yalnız daha çox data lazım olduğunu de",{riskAwareness:3,problemSolving:1,actionOrientation:-5,communication:-3}]
+        ]}
+      ];
+      const baseCandidates = [
+        ["Aysel Məmmədova","Customer Support Intern","Shortlisted",{communication:83,problemSolving:78,empathy:90,structure:76,businessThinking:65,actionOrientation:84,riskAwareness:74}],
+        ["Murad Əliyev","Sales Assistant","Invited",{communication:77,problemSolving:73,empathy:69,structure:72,businessThinking:87,actionOrientation:79,riskAwareness:78}],
+        ["Nigar Həsənli","Data Analyst Intern","Reviewed",{communication:72,problemSolving:86,empathy:62,structure:84,businessThinking:78,actionOrientation:70,riskAwareness:80}],
+        ["Orxan Quliyev","Sales Assistant","Reviewed",{communication:68,problemSolving:64,empathy:61,structure:66,businessThinking:72,actionOrientation:69,riskAwareness:58}]
+      ];
+      let step = 0, answers = [], selected = 0;
+      function show(id, btn) {
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        document.querySelectorAll(".menu button").forEach(b => b.classList.remove("active"));
+        if (btn) btn.classList.add("active");
+        if (id === "company") renderRanking();
+        location.hash = id;
+      }
+      function renderPreviews() {
+        document.getElementById("casePreview").innerHTML = cases.map(c => `<article class="case-card"><span>${c.role}</span><h3>${c.title}</h3><p>${c.signal}</p></article>`).join("");
+      }
+      function startAssessment() {
+        step = 0; answers = [];
+        document.getElementById("assessmentStart").style.display = "none";
+        document.getElementById("report").classList.remove("active");
+        document.getElementById("caseRunner").style.display = "grid";
+        renderCase();
+      }
+      function renderCase() {
+        const c = cases[step]; selected = 0;
+        document.getElementById("caseRunner").innerHTML = `<span class="eyebrow">Case ${step+1}/${cases.length}</span><h2>${c.title}</h2><p>${c.signal}</p><div class="rows">${c.options.map((o,i)=>`<button class="option ${i===0?"active":""}" onclick="selectOption(${i}, this)"><strong>${o[0]}</strong><br><small>${i===1?"Balanslı və professional yanaşma.":"Riskləri və güclü tərəfləri olan alternativ qərar."}</small></button>`).join("")}</div><label>Niyə bu qərarı verdin?<textarea id="reason" rows="5" placeholder="Fakt, risk, müştəri hissi və növbəti addımı yaz."></textarea></label><button class="btn" onclick="saveAnswer()">Cavabı təsdiqlə</button>`;
+      }
+      function selectOption(i, el) { selected = i; document.querySelectorAll(".option").forEach(o => o.classList.remove("active")); el.classList.add("active"); }
+      function saveAnswer() {
+        answers.push({case: step, option: selected, reason: document.getElementById("reason").value});
+        if (step < cases.length - 1) { step++; renderCase(); } else renderReport();
+      }
+      function calcReport() {
+        const scores = Object.fromEntries(skills.map(s => [s, 62]));
+        answers.forEach(a => Object.entries(cases[a.case].options[a.option][1]).forEach(([k,v]) => scores[k] += v));
+        skills.forEach(s => scores[s] = Math.max(0, Math.min(100, Math.round(scores[s]))));
+        return scores;
+      }
+      function avg(scores) { return Math.round(skills.reduce((sum,s)=>sum+scores[s],0)/skills.length); }
+      function renderReport() {
+        const scores = calcReport(); const name = document.getElementById("candidateName").value; const role = document.getElementById("candidateRole").value;
+        localStorage.setItem("jobsimStaticCandidate", JSON.stringify([name, role, "Reviewed", scores]));
+        document.getElementById("caseRunner").style.display = "none";
+        const rows = skills.map(s => `<div><strong>${labels[s]}</strong><span>${scores[s]}/100</span><div class="meter"><i style="width:${scores[s]}%"></i></div></div>`).join("");
+        document.getElementById("report").innerHTML = `<section class="hero"><div><span class="eyebrow">AI skill report</span><h1>${name}</h1><p>Overall score ${avg(scores)}/100. Bu nəticə final hiring qərarı deyil, decision support kimi istifadə olunmalıdır.</p></div><button class="btn" onclick="show('company')">Company ranking</button></section><article class="panel"><h2>Bacarıq breakdown</h2><div class="scores">${rows}</div></article>`;
+        document.getElementById("report").classList.add("active");
+      }
+      function renderRanking() {
+        const stored = localStorage.getItem("jobsimStaticCandidate");
+        const list = stored ? [JSON.parse(stored), ...baseCandidates] : baseCandidates;
+        list.sort((a,b)=>avg(b[3])-avg(a[3]));
+        document.getElementById("topCandidate").textContent = list[0][0];
+        document.getElementById("topScore").textContent = avg(list[0][3]) + "/100 overall";
+        document.getElementById("cohortAvg").textContent = Math.round(list.reduce((s,c)=>s+avg(c[3]),0)/list.length) + "/100";
+        document.getElementById("ranking").innerHTML = list.map(c => `<tr><td><strong>${c[0]}</strong></td><td>${c[1]}</td><td><span class="status">${c[2]}</span></td><td><strong>${avg(c[3])}/100</strong></td><td>${c[3].communication}/100</td><td>${c[3].problemSolving}/100</td><td>${c[3].riskAwareness}/100</td><td><button class="ghost">View report</button></td></tr>`).join("");
+      }
+      renderPreviews(); renderRanking();
+      if (location.hash) show(location.hash.replace("#",""));
+    </script>
+  </body>
+</html>
