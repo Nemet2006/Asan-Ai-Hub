@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { contactChannels, navItems } from "@/lib/site-data";
 
 export function Footer() {
   return (
@@ -7,38 +6,48 @@ export function Footer() {
       <div className="container footer-grid">
         <div>
           <div className="brand-mark brand-mark--footer">
-            <span className="brand-mark__badge">AM</span>
+            <span className="brand-mark__badge">JS</span>
             <span>
-              ASAN muraciet Vision AI
-              <small>Vizual muracietlerin analizi ve cavab dogrulamasi.</small>
+              JobSim AI
+              <small>Assessment MVP</small>
             </span>
           </div>
           <p className="footer-copy">
-            Demo platforma ASAN muraciet ucun AI-esasli vizual analiz, avtomatik
-            kategoriyalashdirma, prioritetlesdirme ve audit mexanizmlerini gosterir.
+            Junior namizədləri real case-lər, structured scoring və company ranking ilə
+            qiymətləndirmək üçün hazırlanmış işlək demo.
           </p>
         </div>
 
         <div>
-          <h3>Bolmeler</h3>
+          <h3>Demo</h3>
           <ul className="footer-links">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href}>{item.label}</Link>
-              </li>
-            ))}
+            <li>
+              <Link href="/">Overview</Link>
+            </li>
+            <li>
+              <Link href="/assessment">Assessment flow</Link>
+            </li>
+            <li>
+              <Link href="/admin">Company dashboard</Link>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h3>Elaqe</h3>
+          <h3>MVP layer</h3>
           <ul className="footer-links">
-            {contactChannels.map((channel) => (
-              <li key={channel.label}>
-                <span>{channel.label}</span>
-                <strong>{channel.value}</strong>
-              </li>
-            ))}
+            <li>
+              <span>Scoring</span>
+              <strong>Rubric + keyword mock</strong>
+            </li>
+            <li>
+              <span>Data</span>
+              <strong>Static + localStorage</strong>
+            </li>
+            <li>
+              <span>Next step</span>
+              <strong>PostgreSQL + AI API</strong>
+            </li>
           </ul>
         </div>
       </div>

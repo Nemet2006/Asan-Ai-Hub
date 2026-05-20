@@ -1,38 +1,44 @@
-# ASAN muraciet Vision AI Demo
+# JobSim AI MVP Demo
 
-Bu repo `ASAN muraciet` informasiya sistemi ucun vizual AI esasli qerar destek platformasinin demo/prototip versiyasidir.
+Bu repo JobSim AI üçün Next.js əsaslı işlək frontend demo/prototipidir. Məqsəd real
+MVP-in əsas məhsul axınını göstərməkdir: company dashboard, candidate assessment,
+rubric scoring, skill report və ranking table.
 
-## Layihede neler var
+## Hazır hissələr
 
-- `Next.js` ile qurulmus Azerbaycanca demo sayt
-- Vetendas, qurum operatoru ve nezaret merkezi ucun ayri demo dashboardlar
-- Vizual analiz, avtomatik kateqoriyalashdirma ve netice dogrulamasi uzre mehsul ssenarileri
-- API ve modul memarligi uzre Express + TypeScript server skeleti
-- PostgreSQL ucun ASAN muraciete uyğun verilənlər modeli
-- Blueprint, wireframe ve UI istiqameti uzre yenilenmis senedler
+- `app/page.tsx`: Pinterest-inspired SaaS dashboard üslubunda JobSim AI workspace
+- `app/assessment/page.tsx`: candidate case solving flow
+- `app/admin/page.tsx`: company dashboard, campaign status, ranking və skill analytics
+- `components/AssessmentExperience.tsx`: local state ilə assessment və report generation
+- `components/AdminDashboard.tsx`: localStorage-dan son nəticəni oxuyan company view
+- `lib/decisionlab-data.ts`: JobSim AI rolları, case-lər, rubric keyword-ləri və mock cohort data
+- `app/globals.css`: yeni responsive UI sistemi
 
-## Esas bolmeler
+## Demo necə işləyir
 
-- `app/`: Next.js App Router sehifeleri
-- `components/`: ortaq UI komponentleri
-- `lib/site-data.ts`: demo mehsul ve dashboard melumatlari
-- `docs/platform-blueprint.md`: mehsul, texniki memarliq ve KPI mentiqi
-- `docs/wireframes.md`: sehife ve dashboard wireframe-leri
-- `docs/ui-layout.md`: vizual istiqamet ve brand dili
-- `db/schema.sql`: ASAN muraciet ucun PostgreSQL model skeleti
-- `server/`: Express API scaffold-u
+1. `/assessment` səhifəsində namizəd case-ləri cavablandırır.
+2. Cavablar rubric və keyword siqnalları ilə skorlanır.
+3. Skill report yaranır və nəticə `localStorage`-a yazılır.
+4. `/admin` səhifəsi son nəticəni cohort ranking-ə əlavə edir.
 
-## Demo meqsedi
+## Növbəti production mərhələsi
 
-Bu layihe asagidaki ehtiyaclari bir yerde gosterir:
-
-- Foto ve video esasli muracietlerin avtomatik analizi
-- Vizual materialdan muraciet metninin ilkin draftinin hazirlanmasi
-- Kateqoriya, aidiyyet ve prioritetin hesablanmasi
-- Qurumun yuklediyi cavab materialinin ilkin muracietle muqayisesi
-- Uygunsuzluq hallari ucun xeberdarliq mexanizmi
-- API ile inteqrasiya oluna bilen modul esasli arxitektura
+- PostgreSQL + Prisma schema
+- Auth və role-based access control
+- Assessment invitation token-ləri
+- OpenAI structured JSON scoring
+- BullMQ/Redis evaluation queue
+- Prompt versioning və AI audit logs
+- Email notifications və tenant isolation
 
 ## Qeyd
 
-Bu workspace-de Node.js ve npm her zaman elcatan olmaya biler. Buna gore fayllar demo ve scaffold kimi yenilenib, amma lokal icra ayrica yoxlanmalidir.
+Bu mühitdə `npm` və `node_modules` əlçatan olmadığı üçün build lokal olaraq icra
+olunmadı. Node/npm quraşdırılmış maşında:
+
+```bash
+npm install
+npm run dev
+```
+
+sonra tətbiq `http://localhost:3000` ünvanında açılmalıdır.

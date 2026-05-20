@@ -1,181 +1,234 @@
 import Link from "next/link";
 import {
-  BlogGrid,
-  CtaBand,
-  DemoPanel,
-  FeatureGrid,
-  LogoCloud,
-  PricingGrid,
-  SectionIntro,
-  SplitHighlight,
-  StepsGrid,
-  TestimonialGrid
-} from "@/components/marketing";
-import {
-  guides,
-  heroMetrics,
-  howItWorks,
-  integrationEcosystem,
-  platformFeatures,
-  rolloutPhases,
-  testimonials
-} from "@/lib/site-data";
+  assessmentCases,
+  campaigns,
+  mockCandidates,
+  roadmapRows,
+  roleCards,
+  skillLabels
+} from "@/lib/decisionlab-data";
+
+const skillItems = Object.values(skillLabels);
+
+function average(values: number[]) {
+  return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+}
+
+const topCandidate = mockCandidates[0];
+const averageScore = average(
+  mockCandidates.flatMap((candidate) => Object.values(candidate.scores))
+);
 
 export default function HomePage() {
   return (
     <main>
-      <section className="home-hero">
-        <div className="container hero-grid">
-          <div>
-            <span className="eyebrow">Dovlet-vetendas munasibetleri ucun vizual AI qati</span>
-            <h1>Muracieti sekilden anlayan ve icra neticesini yoxlayan vahid platforma</h1>
-            <p>
-              Bu demo ASAN muraciet informasiya sistemi ucun foto ve video esasli
-              avtomatik analiz, kategoriyalashdirma, prioritetlesdirme ve evvel-sonra
-              dogrulamasini vahid emeliyyat axininda birlesdirir.
-            </p>
-            <div className="hero-actions">
-              <Link href="/students" className="button">
-                Vetendas axinina bax
-              </Link>
-              <Link href="/courses" className="button button--ghost">
-                API memarligi
-              </Link>
-            </div>
-            <div className="hero-metrics">
-              {heroMetrics.map((item) => (
-                <article key={item.label}>
-                  <strong>{item.value}</strong>
-                  <span>{item.label}</span>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <aside className="hero-board">
-            <div className="hero-board__top">
+      <section className="product-workspace">
+        <div className="container workspace-grid">
+          <aside className="workspace-sidebar" aria-label="JobSim AI workspace">
+            <div className="workspace-logo">
+              <span>JS</span>
               <div>
-                <span className="pill">Pilot ssenari</span>
-                <h3>Foto ve videodan operativ qerar desteyine qeder</h3>
+                <strong>JobSim AI</strong>
+                <small>Talent simulation OS</small>
               </div>
-              <strong>84 san triage</strong>
             </div>
 
-            <div className="hero-stack">
-              <div className="hero-stack__item">
-                <strong>1. Vizual problemi tani</strong>
-                <small>Obyekt, anomaliya, risk siqnallari ve mekansal isareler birlikde cixarilir.</small>
-              </div>
-              <div className="hero-stack__item">
-                <strong>2. Muracieti avtomatik hazirla</strong>
-                <small>Draft metn, kateqoriya, aidiyyet ve prioritet bir paket kimi teqdim olunur.</small>
-              </div>
-              <div className="hero-stack__item">
-                <strong>3. Qurum neticesini dogrula</strong>
-                <small>Yeni yuklenen media ilkin muracietle muqayise edilerek uygunsuzluq siqnallari yaradilir.</small>
-              </div>
+            <nav className="workspace-menu" aria-label="Product modules">
+              <a className="is-active" href="#overview">Overview</a>
+              <a href="#campaigns">Campaigns</a>
+              <a href="#roles">Roles</a>
+              <a href="#pipeline">AI pipeline</a>
+            </nav>
+
+            <div className="workspace-note">
+              <span>Live MVP demo</span>
+              <strong>4 case engine</strong>
+              <p>Candidate flow, AI-style scoring və company dashboard local data ilə işləyir.</p>
             </div>
           </aside>
+
+          <div className="workspace-main">
+            <div className="workspace-topbar">
+              <div>
+                <span className="eyebrow">Pinterest-inspired SaaS dashboard</span>
+                <h1>JobSim AI</h1>
+                <p>
+                  CV əvəzinə real iş simulyasiyaları ilə junior namizədlərin kommunikasiya,
+                  problem həlli və rol-spesifik bacarıqlarını ölçən assessment platforması.
+                </p>
+              </div>
+              <div className="hero-actions">
+                <Link className="button button--ghost" href="/admin">
+                  Company dashboard
+                </Link>
+                <Link className="button" href="/assessment">
+                  Assessment başlat
+                </Link>
+              </div>
+            </div>
+
+            <div className="kpi-grid" id="overview">
+              <article className="kpi-card">
+                <span>Active campaigns</span>
+                <strong>{campaigns.filter((item) => item.status === "Active").length}</strong>
+                <small>Customer Support və Sales pilotları açıqdır</small>
+              </article>
+              <article className="kpi-card">
+                <span>Completed simulations</span>
+                <strong>{campaigns.reduce((sum, item) => sum + item.completed, 0)}</strong>
+                <small>Mock cohort nəticələri ranking-ə düşür</small>
+              </article>
+              <article className="kpi-card">
+                <span>Average score</span>
+                <strong>{averageScore}/100</strong>
+                <small>7 bacarıq üzrə ümumi orta</small>
+              </article>
+              <article className="kpi-card accent">
+                <span>Top candidate</span>
+                <strong>{topCandidate.name}</strong>
+                <small>{topCandidate.role}</small>
+              </article>
+            </div>
+
+            <div className="dashboard-split">
+              <section className="panel" id="campaigns">
+                <div className="panel-head">
+                  <div>
+                    <span className="eyebrow">Company view</span>
+                    <h2>Assessment campaigns</h2>
+                  </div>
+                  <Link href="/admin" className="icon-button" aria-label="Open dashboard">
+                    →
+                  </Link>
+                </div>
+
+                <div className="campaign-list">
+                  {campaigns.map((campaign) => (
+                    <article className="campaign-row" key={campaign.title}>
+                      <div>
+                        <strong>{campaign.title}</strong>
+                        <span>{campaign.role}</span>
+                      </div>
+                      <div className="campaign-progress">
+                        <span>
+                          {campaign.completed}/{campaign.invited}
+                        </span>
+                        <div className="meter">
+                          <i style={{ width: `${(campaign.completed / campaign.invited) * 100}%` }} />
+                        </div>
+                      </div>
+                      <small>{campaign.deadline}</small>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="panel visual-panel">
+                <div className="ai-card">
+                  <div className="ai-orbit" />
+                  <span>AI evaluation</span>
+                  <strong>Structured JSON scoring</strong>
+                  <p>
+                    Prompt version, rubric criteria, raw response və risk flags report üçün saxlanılır.
+                  </p>
+                </div>
+                <div className="mini-chart" aria-label="Skill score visual">
+                  {skillItems.slice(0, 7).map((skill, index) => (
+                    <span
+                      key={skill}
+                      title={skill}
+                      style={{ height: `${44 + index * 7}px` }}
+                    />
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <section className="panel" id="roles">
+              <div className="panel-head">
+                <div>
+                  <span className="eyebrow">Simulation catalog</span>
+                  <h2>Rol əsaslı case engine</h2>
+                </div>
+                <Link className="button button--ghost" href="/assessment">
+                  Demo case aç
+                </Link>
+              </div>
+
+              <div className="role-grid">
+                {roleCards.map((item) => (
+                  <article className={`role-card ${item.color}`} key={item.role}>
+                    <span>{item.cases} case</span>
+                    <h3>{item.role}</h3>
+                    <div className="tag-row">
+                      {item.skills.map((skill) => (
+                        <small key={skill}>{skill}</small>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <div className="dashboard-split">
+              <section className="panel" id="pipeline">
+                <div className="panel-head">
+                  <div>
+                    <span className="eyebrow">Candidate flow</span>
+                    <h2>İşlək assessment axını</h2>
+                  </div>
+                </div>
+                <ol className="timeline-list">
+                  {[
+                    "Namizəd invitation link ilə daxil olur",
+                    "Case scenario oxuyur və qərar seçir",
+                    "İzah mətni rubric keyword-ləri ilə əlavə skor verir",
+                    "Skill report və company ranking avtomatik yenilənir"
+                  ].map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ol>
+              </section>
+
+              <section className="panel">
+                <div className="panel-head">
+                  <div>
+                    <span className="eyebrow">Roadmap</span>
+                    <h2>MVP-dən backend-ə</h2>
+                  </div>
+                </div>
+                <div className="roadmap-list">
+                  {roadmapRows.map((row) => (
+                    <div key={row.area}>
+                      <strong>{row.area}</strong>
+                      <span>{row.scope}</span>
+                      <small>{row.status}</small>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <section className="panel">
+              <div className="panel-head">
+                <div>
+                  <span className="eyebrow">Case preview</span>
+                  <h2>Hazır simulyasiya tapşırıqları</h2>
+                </div>
+              </div>
+              <div className="case-grid">
+                {assessmentCases.map((item) => (
+                  <article className="case-preview" key={item.id}>
+                    <span>{item.role}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.successSignal}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </div>
         </div>
       </section>
-
-      <section className="section">
-        <div className="container">
-          <SectionIntro
-            eyebrow="Nece isleyir"
-            title="Muracietin qebulu, qerar desteyi ve nezaret eyni mehsul mentiqinde birlesir"
-            description="Hell yalniz analizi suretlendirmir; hem de yanlis yonlendirme riskini azaldir, netice keyfiyyetine nezareti guclendirir ve operatorlarin diqqetini real istisnalara yoneldirir."
-            align="center"
-          />
-          <StepsGrid steps={howItWorks} />
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <SectionIntro
-            eyebrow="Platforma imkanlari"
-            title="Cagirisda axtarilan butun kritik ehtiyaclar vahid modul destinde toplanir"
-            description="Vizual analiz muherriki, avtomatik metn yaradulmasi, yonlendirme ve netice dogrulamasi ayri modullar kimi isleyir ve API uzerinden inteqrasiya olunur."
-          />
-          <FeatureGrid features={platformFeatures} />
-        </div>
-      </section>
-
-      <SplitHighlight
-        eyebrow="AI qerar masasi"
-        title="Operator ucun yalniz melumat deyil, fealiyyete hazir qerar konteksti yaradilir"
-        description="Platforma muracietin ne oldugunu, kime getmeli oldugunu ve neticenin sonradan nece yoxlanacagini eyni panelde gosterir. Bu yanasma hem ceviklik, hem de seffafliq yaradir."
-        bullets={[
-          "Vetendas ucun avtomatik metn drafti ve kateqoriya teklifi",
-          "Qurum ucun risk esasli novbe ve SLA yonlendirmesi",
-          "Nezaretci ucun evvel-sonra dogrulama ve audit siqnallari",
-          "Feedback toplama ile modelin davamli yaxsilasdirilmasi"
-        ]}
-        panel={
-          <DemoPanel
-            title="Inteqre olunmus emeliyyat paneli"
-            subtitle="Bir muracietin qebuldan cavab tesdiqine qeder kechdiyi reqemsal iz."
-            items={[
-              { label: "Confidence", value: "0.92" },
-              { label: "Prioritet", value: "Tecili" },
-              { label: "Aidiyyet", value: "Yol xidmeti" },
-              { label: "Dogrulama skoru", value: "0.88" }
-            ]}
-          />
-        }
-      />
-
-      <section className="section">
-        <div className="container">
-          <SectionIntro
-            eyebrow="Ekosistem"
-            title="Hell bir qurum ucun yox, koordinasiyali dovlet xidmeti modeli ucun nezerde tutulur"
-            description="Platforma muxtelif qurumlari eyni melumat dili ve audit izi ile birlesdirerek muraciet idareciliyini daha cevik ve proaktiv edir."
-          />
-          <LogoCloud items={integrationEcosystem} />
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <SectionIntro
-            eyebrow="Deyer"
-            title="Esas qazanc suret deyil, daha obyektiv qerar ve daha guclu nezaretdir"
-            description="Ferqli rollar ucun platformanin verdiyi praktik fayda asagidaki kimi gorunur."
-          />
-          <TestimonialGrid items={testimonials} />
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <SectionIntro
-            eyebrow="Tetbiq merheleleri"
-            title="Pilotdan emeliyyat muhitine kechid ucun realist yol xeritesi"
-            description="Mehsul bir defelik demo kimi deyil, olcule bilen pilot ve merheleli tetbiq modeli kimi teqdim olunur."
-          />
-          <PricingGrid items={rolloutPhases} />
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <SectionIntro
-            eyebrow="Senedlesme"
-            title="Texniki ve idareetme qerarlari ayri sened seviyyesinde esaslandirilir"
-            description="Hellin mehsul mentiqi, API skeleti, risk cerchivesi ve KPI yanasmasi ayri senedler ve demo panellerle desteklenir."
-          />
-          <BlogGrid items={guides} />
-        </div>
-      </section>
-
-      <CtaBand
-        title="Bu skeleti birbasa pilot teqdimati ve texniki demo kimi istifade etmek olar"
-        description="Sayt hissesi hellin deyerini gosterir, server ve verilenler modeli ise inteqrasiya ucun baslangic noqtesi yaradir."
-        primary={{ label: "Demo panelleri ac", href: "/dashboard" }}
-        secondary={{ label: "Pilot elaqesi", href: "/contact" }}
-      />
     </main>
   );
 }

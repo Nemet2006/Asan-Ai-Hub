@@ -5,9 +5,9 @@ import { Header } from "@/components/Header";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ASAN muraciet Vision AI | Vizual muraciet analizi ve dogrulama demo",
+  title: "JobSim AI | AI job simulation assessment",
   description:
-    "ASAN muraciet informasiya sistemi ucun vizual analiz, avtomatik kateqoriyalashdirma, prioritetlesdirme ve icra netijelerinin dogrulanmasi uzre demo platforma."
+    "Junior namizədləri real iş simulyasiyaları və AI-style skill scoring ilə qiymətləndirən MVP demo."
 };
 
 export default function RootLayout({

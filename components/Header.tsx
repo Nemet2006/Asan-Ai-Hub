@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navItems } from "@/lib/site-data";
+
+const navItems = [
+  { label: "Overview", href: "/" },
+  { label: "Assessment", href: "/assessment" },
+  { label: "Company", href: "/admin" }
+];
 
 export function Header() {
   const pathname = usePathname();
@@ -11,35 +16,31 @@ export function Header() {
     <header className="site-header">
       <div className="container nav-shell">
         <Link href="/" className="brand-mark">
-          <span className="brand-mark__badge">AM</span>
+          <span className="brand-mark__badge">JS</span>
           <span>
-            ASAN muraciet Vision AI
-            <small>Vizual triage. Prioritet. Dogrulama.</small>
+            JobSim AI
+            <small>AI job simulation platform</small>
           </span>
         </Link>
 
         <nav className="nav-links" aria-label="Primary">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={isActive ? "is-active" : ""}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <Link
+              className={pathname === item.href ? "is-active" : ""}
+              href={item.href}
+              key={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="nav-actions">
-          <Link href="/dashboard" className="button button--ghost">
-            Demo paneller
+          <Link href="/admin" className="button button--ghost">
+            Dashboard
           </Link>
-          <Link href="/contact" className="button">
-            Pilot elaqesi
+          <Link href="/assessment" className="button">
+            Start
           </Link>
         </div>
       </div>
