@@ -4,6 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "video:dev": "remotion studio remotion/index.ts",
+    "video:render:landscape": "remotion render remotion/index.ts JobSimAI-Landscape out/jobsim-ai-landscape.mp4",
+    "video:render:vertical": "remotion render remotion/index.ts JobSimAI-Vertical out/jobsim-ai-vertical.mp4",
+    "video:still:landscape": "remotion still remotion/index.ts JobSimAI-Landscape --frame=30 --scale=0.25",
+    "video:still:vertical": "remotion still remotion/index.ts JobSimAI-Vertical --frame=30 --scale=0.25",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -17,8 +22,10 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@remotion/cli": "^4.0.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.0",
+    "remotion": "^4.0.0",
     "typescript": "^5.4.5"
   }
 }

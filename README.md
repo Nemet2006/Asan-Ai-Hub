@@ -42,3 +42,48 @@ npm run dev
 ```
 
 sonra tətbiq `http://localhost:3000` ünvanında açılmalıdır.
+
+## Remotion JobSim AI promo video
+
+This repo now includes a 75-second Remotion SaaS explainer video for JobSim AI.
+
+- Landscape composition: `JobSimAI-Landscape` at 1920x1080
+- Vertical composition: `JobSimAI-Vertical` at 1080x1920
+- Entry point: `remotion/index.ts`
+- Main config: `remotion/config.ts`
+- Optional voiceover script: `remotion/voiceover-script.md`
+- Placeholder logo: `public/jobsim-logo-placeholder.svg`
+
+Preview the video:
+
+```bash
+npm install
+npm run video:dev
+```
+
+Render MP4 files:
+
+```bash
+npm run video:render:landscape
+npm run video:render:vertical
+```
+
+You can also render directly with Remotion:
+
+```bash
+npx remotion render remotion/index.ts JobSimAI-Landscape out/jobsim-ai-landscape.mp4
+npx remotion render remotion/index.ts JobSimAI-Vertical out/jobsim-ai-vertical.mp4
+```
+
+The existing Next.js app still uses:
+
+```bash
+npm run dev
+npm run build
+```
+
+Manual customization points:
+
+- Update timing, scene text, colors, and the placeholder logo path in `remotion/config.ts`.
+- Replace `public/jobsim-logo-placeholder.svg` with a final brand logo when available.
+- Add recorded voiceover or music later if you want audio synced to the current scene timing.

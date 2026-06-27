@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="az">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DecisionLab Demo</title>
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --surface: #ffffff;
+        --line: #d8dee7;
+        --text: #172033;
+        --muted: #5f6b7a;
+        --blue: #1b5f8f;
+        --blue-deep: #10233f;
+        --green: #1e7a5f;
+        --accent: #b65f2a;
+        --shadow: 0 16px 42px rgba(23, 32, 51, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--bg);
+        font-family: Aptos, "Segoe UI", Arial, sans-serif;
+      }
+
+      .grid-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(23, 32, 51, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(23, 32, 51, 0.035) 1px, transparent 1px);
+        background-size: 72px 72px;
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        padding: 16px 0;
+        background: rgba(246, 247, 249, 0.86);
+        backdrop-filter: blur(14px);
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 18px;
+        align-items: center;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        font-weight: 800;
+      }
+
+      .brand small {
+        display: block;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .badge {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background: var(--blue-deep);
+        color: #fff;
+      }
+
+      .tabs,
+      .actions,
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      button,
+      .button {
+        min-height: 44px;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--blue);
+        color: #fff;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      button.secondary,
+      .tab {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--blue-deep);
+      }
+
+      .tab.active {
+        border-color: var(--blue);
+        background: #f2f7fb;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+      }
+
+      main {
+        padding: 36px 0 58px;
+      }
+
+      .hero,
+      .two-col,
+      .assessment,
+      .report-grid,
+      .admin-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 22px;
+        align-items: start;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(3.2rem, 8vw, 6.4rem);
+        line-height: 0.92;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: clamp(1.7rem, 3vw, 2.4rem);
+        line-height: 1.08;
+      }
+
+      h3 {
+        margin: 10px 0;
+      }
+
+      p,
+      small,
+      td,
+      li {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        margin-bottom: 14px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: #e9f1f7;
+        color: var(--blue-deep);
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .panel,
+      .case-card,
+      .metric,
+      .case-preview,
+      .rail,
+      .risk-card,
+      .start-panel {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .mini-report,
+      .score-list,
+      .options,
+      .insights,
+      .feedback-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .mini-report div,
+      .insights li,
+      .feedback-card,
+      .option,
+      .participant,
+      .tension {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f9fafb;
+      }
+
+      .mini-report div,
+      .score-row > div,
+      .case-meta,
+      .section-head,
+      .report-head,
+      .admin-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .section {
+        margin-top: 46px;
+      }
+
+      .case-grid,
+      .risk-grid,
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .case-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .skill-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .skill-cloud span {
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        font-weight: 800;
+      }
+
+      .assessment {
+        grid-template-columns: 320px minmax(0, 1fr);
+      }
+
+      .rail {
+        position: sticky;
+        top: 116px;
+      }
+
+      .rail ol,
+      .insights {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .rail li {
+        margin-top: 10px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .rail li.active {
+        border-color: var(--blue);
+        color: var(--blue-deep);
+        font-weight: 800;
+      }
+
+      .case-card {
+        display: grid;
+        gap: 18px;
+      }
+
+      .tension {
+        border-left: 4px solid var(--accent);
+        background: #fff8f3;
+      }
+
+      .option {
+        width: 100%;
+        min-height: 0;
+        color: var(--text);
+        text-align: left;
+      }
+
+      .option.selected,
+      .option:hover {
+        border-color: var(--blue);
+        background: #f2f7fb;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        font: inherit;
+      }
+
+      .scorebar {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e7ebf1;
+      }
+
+      .scorebar span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--blue), var(--green));
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+      }
+
+      th {
+        background: #f2f5f8;
+        color: var(--blue-deep);
+        font-size: 0.84rem;
+        text-transform: uppercase;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 960px) {
+        .nav,
+        .hero,
+        .two-col,
+        .assessment,
+        .report-grid,
+        .admin-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .case-grid,
+        .risk-grid,
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .rail {
+          position: static;
+        }
+      }
+
+      @media print {
+        header,
+        .grid-bg,
+        .no-print {
+          display: none !important;
+        }
+
+        body {
+          background: #fff;
+        }
+
+        .container {
+          width: 100%;
+        }
+
+        .panel,
+        .metric,
+        .case-preview,
+        .risk-card {
+          box-shadow: none;
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-bg"></div>
+    <header>
+      <div class="container nav">
+        <div class="brand">
+          <span class="badge">DL</span>
+          <span>DecisionLab<small>Sales & support assessment</small></span>
+        </div>
+        <nav class="tabs">
+          <button class="tab active" data-view="overview">Overview</button>
+          <button class="tab" data-view="assessment">Assessment</button>
+          <button class="tab" data-view="admin">Manager dashboard</button>
+        </nav>
+        <div class="actions">
+          <button class="secondary" data-view="admin">Admin</button>
+          <button data-view="assessment">Start demo</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="overview-view"></section>
+      <section id="assessment-view" class="hidden"></section>
+      <section id="admin-view" class="hidden"></section>
+    </main>
+
+    <script>
+      const skillLabels = {
+        problemFraming: "Problem framing",
+        customerEmpathy: "Customer empathy",
+        communication: "Communication",
+        commercialThinking: "Commercial thinking",
+        prioritization: "Prioritization",
+        riskAwareness: "Risk awareness",
+        actionOrientation: "Action orientation"
+      };
+
+      const skillKeys = Object.keys(skillLabels);
+
+      const cases = [
+        {
+          id: "price-objection",
+          title: "Müştəri qiymətin baha olduğunu deyir",
+          role: "Junior sales representative",
+          context:
+            "B2B müştəri aylıq paketlə maraqlanır, amma ilk görüşdə qiymətin bazardakı alternativlərdən yüksək olduğunu bildirir. Büdcə limiti realdır, amma ehtiyac da güclüdür.",
+          tension:
+            "Endirim satış şansını artıra bilər, amma məhsulun dəyərini ucuzlaşdırmaq və margin riskini böyütmək ehtimalı var.",
+          success: "Qiymət etirazını dəyər, ehtiyac və növbəti addım çərçivəsində idarə etmək.",
+          options: [
+            {
+              id: "discount-fast",
+              label: "Dərhal 20% endirim təklif et",
+              description: "Müştərini itirməmək üçün qiyməti tez aşağı salırsan.",
+              feedback:
+                "Satışı qısamüddətli qoruyur, amma kommersiya riskini və dəyər arqumentini zəif idarə edir.",
+              impact: { actionOrientation: 7, commercialThinking: -9, riskAwareness: -8, communication: -2 }
+            },
+            {
+              id: "value-diagnose",
+              label: "Əvvəl ehtiyacı və ROI-ni dəqiqləşdir",
+              description:
+                "Qiymətə cavab verməzdən əvvəl müştərinin prioritetini, istifadə həcmini və gözlənilən biznes nəticəsini soruşursan.",
+              feedback:
+                "Güclü qərardır. Qiyməti tək rəqəm kimi yox, biznes dəyəri və uyğun paket seçimi kimi çərçivələndirir.",
+              impact: {
+                problemFraming: 10,
+                commercialThinking: 10,
+                communication: 7,
+                customerEmpathy: 5,
+                riskAwareness: 5,
+                prioritization: 4
+              }
+            },
+            {
+              id: "defend-price",
+              label: "Qiymətin niyə yüksək olduğunu sərt izah et",
+              description: "Məhsulun daha yaxşı olduğunu deyib etirazı bağlamağa çalışırsan.",
+              feedback:
+                "Dəyər arqumenti vacibdir, amma müştərinin real narahatlığını eşitmədən müdafiəçi ton yaradır.",
+              impact: { communication: -6, customerEmpathy: -8, commercialThinking: 3, problemFraming: -3 }
+            }
+          ]
+        },
+        {
+          id: "refund-request",
+          title: "Narazı müştəri refund istəyir",
+          role: "Customer support specialist",
+          context:
+            "Müştəri xidmətin gözlədiyi nəticəni vermədiyini deyir və tam refund tələb edir. Müqaviləyə görə tam refund avtomatik deyil, amma narazılıq əsaslı görünür.",
+          tension:
+            "Həm müştəri etibarını qorumaq, həm də qayda və maliyyə riskini nəzərə almaq lazımdır.",
+          success: "Empatiya göstərmək, faktları toplamaq və qərarı policy çərçivəsində eskalasiya etmək.",
+          options: [
+            {
+              id: "refund-immediate",
+              label: "Tam refund-u dərhal təsdiqlə",
+              description: "Müştərinin emosiyasını azaltmaq üçün pulun qaytarılacağını deyirsən.",
+              feedback: "Empatiya görünür, amma səlahiyyət, policy və presedent riski nəzərə alınmır.",
+              impact: { customerEmpathy: 6, actionOrientation: 5, riskAwareness: -10, commercialThinking: -7 }
+            },
+            {
+              id: "policy-only",
+              label: "Policy-yə istinad edib refund-u rədd et",
+              description: "Müqavilə şərtini əsas gətirib tələbi bağlayırsan.",
+              feedback: "Risk nəzarəti var, amma müştəri narazılığını və reputasiya riskini zəif idarə edir.",
+              impact: { riskAwareness: 4, customerEmpathy: -10, communication: -8, actionOrientation: -5 }
+            },
+            {
+              id: "investigate-escalate",
+              label: "Empatiya qur, faktları topla və eskalasiya et",
+              description:
+                "Problemi qəbul edir, istifadə tarixçəsini yoxlayır, mümkün kompensasiya variantını və SLA ilə cavab vaxtını bildirirsən.",
+              feedback: "Ən balanslı yanaşmadır. Müştərinin hissini tanıyır, faktları ayırır və riski nəzarətdə saxlayır.",
+              impact: {
+                customerEmpathy: 10,
+                communication: 9,
+                riskAwareness: 9,
+                problemFraming: 7,
+                prioritization: 6,
+                actionOrientation: 5
+              }
+            }
+          ]
+        },
+        {
+          id: "delivery-delay",
+          title: "Çatdırılma gecikib, müştəri əsəbidir",
+          role: "Customer support specialist",
+          context:
+            "Premium müştərinin sifarişi 48 saat gecikib. Müştəri sosial mediada şikayət edəcəyini deyir və dəqiq cavab istəyir.",
+          tension:
+            "Sakitləşdirmək üçün boş vəd vermək cazibəlidir, amma real əməliyyat statusu təsdiqlənmədən risk yaradır.",
+          success: "Emosiyanı azaltmaq, statusu dəqiqləşdirmək və növbəti addımı aydın vermək.",
+          options: [
+            {
+              id: "promise-today",
+              label: "Bu gün çatacağını vəd et",
+              description: "Müştərini sakitləşdirmək üçün təsdiqlənməmiş konkret vəd verirsən.",
+              feedback: "Təsdiqlənməmiş vəd reputasiya və eskalasiya riskini artırır.",
+              impact: { actionOrientation: 4, riskAwareness: -11, communication: -5, problemFraming: -4 }
+            },
+            {
+              id: "own-and-update",
+              label: "Məsuliyyəti qəbul et və dəqiq update planı ver",
+              description:
+                "Gecikməyə görə üzr istəyir, logistika statusunu yoxlayacağını və 30 dəqiqə ərzində update verəcəyini bildirirsən.",
+              feedback: "Güclü support davranışıdır. Müştəri emosiyasını tanıyır, boş vəd vermir və konkret plan qurur.",
+              impact: {
+                customerEmpathy: 9,
+                communication: 10,
+                actionOrientation: 9,
+                prioritization: 8,
+                riskAwareness: 6,
+                problemFraming: 5
+              }
+            },
+            {
+              id: "blame-logistics",
+              label: "Logistikanı günahlandır",
+              description: "Gecikmənin support komandadan asılı olmadığını deyirsən.",
+              feedback: "Daxili səbəb doğru ola bilər, amma müştəri üçün məsuliyyətdən yayınma kimi səslənir.",
+              impact: { customerEmpathy: -9, communication: -8, actionOrientation: -5, riskAwareness: -4 }
+            }
+          ]
+        },
+        {
+          id: "overpromise",
+          title: "Satışçı müştəriyə artıq vəd verib",
+          role: "Sales/support handoff",
+          context:
+            "Satış görüşündə müştəriyə hazır olmayan inteqrasiya funksiyası vəd edilib. Onboarding zamanı müştəri həmin funksiyanı tələb edir.",
+          tension:
+            "Münasibəti qorumaq lazımdır, amma yalanı davam etdirmək product və hüquqi risk yaradır.",
+          success: "Faktı gizlətməmək, alternativ yol təklif etmək və daxili eskalasiya ilə riski idarə etmək.",
+          options: [
+            {
+              id: "continue-promise",
+              label: "Vədi davam etdir və vaxt qazan",
+              description: "Funksiyanın tezliklə hazır olacağını deyib konkret tarix vermirsən.",
+              feedback: "Münasibəti anlıq qoruyur, amma etibar, hüquqi risk və daxili alignment problemini böyüdür.",
+              impact: { riskAwareness: -12, communication: -7, commercialThinking: -4, problemFraming: -5 }
+            },
+            {
+              id: "transparent-alternative",
+              label: "Şəffaf ol və alternativ workaround təklif et",
+              description:
+                "Funksiyanın hazır olmadığını deyir, mövcud imkanlarla yaxın nəticə verən yol göstərir və product/sales rəhbərinə eskalasiya edirsən.",
+              feedback: "Ən sağlam qərardır. Etibarı qoruyur, problemi biznes prioritetinə çevirir və riski sənədləşdirir.",
+              impact: {
+                riskAwareness: 11,
+                communication: 9,
+                problemFraming: 8,
+                actionOrientation: 8,
+                commercialThinking: 7,
+                prioritization: 7
+              }
+            },
+            {
+              id: "sales-fault",
+              label: "Satış komandasının səhv etdiyini de",
+              description: "Müştəriyə problemin satışdan qaynaqlandığını açıq bildirirsən.",
+              feedback: "Şəffaflıq var, amma daxili komandanı müştəri qarşısında günahlandırmaq peşəkar kommunikasiya deyil.",
+              impact: { communication: -8, customerEmpathy: -3, riskAwareness: 2, actionOrientation: -2 }
+            }
+          ]
+        },
+        {
+          id: "competitor-cheaper",
+          title: "Müştəri rəqibin daha ucuz verdiyini deyir",
+          role: "Junior sales representative",
+          context:
+            "Müştəri son qərar mərhələsindədir və rəqibin 30% ucuz təklif verdiyini bildirir. Əsas ehtiyac sürətli tətbiq, stabil support və hesabatlılıqdır.",
+          tension:
+            "Rəqiblə qiymət yarışına girmək asandır, amma müştərinin risk və nəticə prioritetləri daha dərin ola bilər.",
+          success: "Rəqib müqayisəsini ehtiyac, risk və ümumi sahiblik dəyəri üzərindən idarə etmək.",
+          options: [
+            {
+              id: "match-price",
+              label: "Rəqibin qiymətini match et",
+              description: "Müqaviləni bağlamaq üçün eyni qiyməti təklif edirsən.",
+              feedback: "Qısa yol kimi görünür, amma fərqləndirmə, margin və uzunmüddətli dəyər arqumenti itir.",
+              impact: { actionOrientation: 5, commercialThinking: -8, riskAwareness: -5, problemFraming: -4 }
+            },
+            {
+              id: "compare-value",
+              label: "Ümumi dəyər və risk müqayisəsi apar",
+              description:
+                "Rəqibin təklifini detallandırmağı xahiş edir, tətbiq vaxtı, support SLA, gizli xərclər və biznes riski üzrə müqayisə qurursan.",
+              feedback: "Satış üçün ən yetkin yanaşmadır. Qiyməti biznes nəticəsi, risk və uyğunluqla əlaqələndirir.",
+              impact: {
+                commercialThinking: 11,
+                problemFraming: 9,
+                communication: 7,
+                riskAwareness: 8,
+                prioritization: 6,
+                customerEmpathy: 4
+              }
+            },
+            {
+              id: "criticize-competitor",
+              label: "Rəqibin zəif olduğunu vurğula",
+              description: "Rəqibin keyfiyyətinin aşağı olduğunu deyərək müştərini çəkindirməyə çalışırsan.",
+              feedback: "Sübutsuz rəqib tənqidi etibarı azaldır və müştərinin real kriteriyalarını açmır.",
+              impact: { communication: -7, customerEmpathy: -4, commercialThinking: 1, problemFraming: -3 }
+            }
+          ]
+        }
+      ];
+
+      const keywords = {
+        problemFraming: ["səbəb", "kontekst", "ehtiyac", "problem", "fakt", "araşdır"],
+        customerEmpathy: ["üzr", "anlayıram", "narahat", "hiss", "empatiya", "dinlə"],
+        communication: ["aydın", "izah", "bildir", "mesaj", "ton", "cavab"],
+        commercialThinking: ["dəyər", "roi", "büdcə", "margin", "paket", "gəlir"],
+        prioritization: ["təcili", "prioritet", "sla", "vaxt", "növbəti", "30 dəqiqə"],
+        riskAwareness: ["risk", "policy", "səlahiyyət", "eskalasiya", "presedent", "hüquqi"],
+        actionOrientation: ["addım", "plan", "yoxla", "təklif", "həll", "follow-up"]
+      };
+
+      const mockCandidates = [
+        [ "Aysel Məmmədova", "Customer support junior", "Bugün, 10:24", [74, 86, 79, 63, 76, 69, 82] ],
+        [ "Rauf Əliyev", "Junior sales", "Bugün, 11:05", [69, 71, 73, 82, 68, 74, 77] ],
+        [ "Nigar Həsənli", "Support trainee", "Dünən, 16:40", [61, 78, 72, 55, 64, 58, 70] ],
+        [ "Murad Quliyev", "Junior sales", "Dünən, 15:10", [80, 68, 75, 88, 72, 81, 74] ],
+        [ "Ləman Rzayeva", "Customer support junior", "Bazar ertəsi, 14:22", [57, 64, 66, 59, 62, 52, 67] ]
+      ].map(([name, role, completedAt, values]) => ({
+        name,
+        role,
+        completedAt,
+        scores: Object.fromEntries(skillKeys.map((key, index) => [key, values[index]]))
+      }));
+
+      const state = {
+        view: "overview",
+        name: "Demo namizəd",
+        role: "Junior support / sales",
+        started: false,
+        step: 0,
+        answers: [],
+        selected: "",
+        reason: ""
+      };
+
+      function scorebar(value) {
+        return `<div class="scorebar"><span style="width:${value}%"></span></div>`;
+      }
+
+      function average(values) {
+        return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+      }
+
+      function candidateAverage(candidate) {
+        return average(skillKeys.map((key) => candidate.scores[key]));
+      }
+
+      function clamp(value) {
+        return Math.max(0, Math.min(100, Math.round(value)));
+      }
+
+      function reasonBonus(reason) {
+        const normalized = reason.toLocaleLowerCase("az");
+        return Object.fromEntries(
+          skillKeys.map((skill) => {
+            const hits = keywords[skill].filter((word) => normalized.includes(word.toLocaleLowerCase("az"))).length;
+            return [skill, Math.min(6, hits * 2)];
+          })
+        );
+      }
+
+      function calculateReport(answers) {
+        const scores = Object.fromEntries(skillKeys.map((key) => [key, 62]));
+        const feedback = [];
+
+        answers.forEach((answer) => {
+          const item = cases.find((entry) => entry.id === answer.caseId);
+          const option = item.options.find((entry) => entry.id === answer.optionId);
+          const bonus = reasonBonus(answer.reason);
+
+          skillKeys.forEach((skill) => {
+            scores[skill] += option.impact[skill] || 0;
+            scores[skill] += bonus[skill] || 0;
+          });
+
+          feedback.push({
+            caseTitle: item.title,
+            selectedLabel: option.label,
+            feedback: option.feedback,
+            reasonSignal:
+              answer.reason.trim().length > 70
+                ? "İzah konkret idi və rubric üzrə əlavə siqnallar verdi."
+                : "İzah qısa idi; real assessment-də daha konkret fakt və risk dili tələb olunardı."
+          });
+        });
+
+        skillKeys.forEach((skill) => {
+          scores[skill] = clamp(scores[skill]);
+        });
+
+        const sorted = [...skillKeys].sort((a, b) => scores[b] - scores[a]);
+        const strongest = sorted.slice(0, 2);
+        const weakest = sorted.slice(-2).reverse();
+
+        return { scores, feedback, strongest, weakest };
+      }
+
+      function setView(view) {
+        state.view = view;
+        document.querySelectorAll("[data-view]").forEach((button) => {
+          button.classList.toggle("active", button.dataset.view === view);
+        });
+        document.getElementById("overview-view").classList.toggle("hidden", view !== "overview");
+        document.getElementById("assessment-view").classList.toggle("hidden", view !== "assessment");
+        document.getElementById("admin-view").classList.toggle("hidden", view !== "admin");
+        render();
+      }
+
+      function renderOverview() {
+        document.getElementById("overview-view").innerHTML = `
+          <div class="hero">
+            <div>
+              <span class="eyebrow">AI-supported assessment platform</span>
+              <h1>DecisionLab</h1>
+              <p>Junior sales və customer support əməkdaşlarının real müştəri situasiyalarında necə qərar verdiyini ölçən ciddi B2B assessment demo.</p>
+              <div class="actions no-print">
+                <button data-view="assessment">Demo assessment aç</button>
+                <button class="secondary" data-view="admin">Manager dashboard</button>
+              </div>
+            </div>
+            <aside class="panel">
+              <div class="section-head"><span>Sales demo ready</span><strong>5 case</strong></div>
+              <div class="mini-report">
+                <div><span>Customer empathy</span><strong>78/100</strong></div>
+                <div><span>Communication</span><strong>72/100</strong></div>
+                <div><span>Commercial thinking</span><strong>61/100</strong></div>
+                <div><span>Risk awareness</span><strong>58/100</strong></div>
+              </div>
+              <p>Namizəd empatiya qurur, amma kommersiya və risk qərarlarını daha strukturlaşdırılmış əsaslandırmalıdır.</p>
+            </aside>
+          </div>
+          <section class="section">
+            <span class="eyebrow">Demo flow</span>
+            <h2>Satış görüşündə göstərmək üçün tam işlək assessment axını</h2>
+            <div class="case-grid">
+              ${cases.map((item, index) => `<article class="case-preview"><span>Case ${index + 1}</span><h3>${item.title}</h3><p>${item.success}</p></article>`).join("")}
+            </div>
+          </section>
+          <section class="section two-col">
+            <div>
+              <span class="eyebrow">Measured skills</span>
+              <h2>Demo 7 davranış bacarığını ölçür</h2>
+              <p>Hər seçim bacarıqlara təsir edir, yazılı izah isə keyword/rubric mock ilə əlavə siqnal verir.</p>
+            </div>
+            <div class="skill-cloud">${skillKeys.map((key) => `<span>${skillLabels[key]}</span>`).join("")}</div>
+          </section>
+          <section class="section">
+            <span class="eyebrow">Scale roadmap</span>
+            <h2>Demo-dan pullu pilot platformasına keçid</h2>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Sahə</th><th>Sadə MVP</th><th>Scale versiya</th></tr></thead>
+                <tbody>
+                  <tr><td>Frontend</td><td>Static HTML / Next.js demo</td><td>Next.js app with workspaces</td></tr>
+                  <tr><td>Backend</td><td>Local/static data</td><td>Supabase / Firebase</td></tr>
+                  <tr><td>Scoring</td><td>Rubric + keyword mock</td><td>OpenAI JSON scoring + calibration</td></tr>
+                  <tr><td>Reports</td><td>Browser PDF</td><td>Server-side branded PDF</td></tr>
+                  <tr><td>Admin</td><td>Mock cohort dashboard</td><td>Real company/team dashboard</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="section risk-grid">
+            ${[
+              ["AI scoring obyektivliyi", "OpenAI scoring üçün sərt JSON schema, sabit rubric və test dataset lazımdır."],
+              ["Assessment etibarlılığı", "Score-ların niyə belə çıxdığı case feedback və manager interpretation ilə izah olunmalıdır."],
+              ["Data privacy", "Pilotdan sonra consent, retention və company-level access control əlavə olunmalıdır."],
+              ["Overengineering", "Avatar, game mexanikası və simulation engine indi satış dəyərini artırmır."]
+            ].map(([title, text]) => `<article class="risk-card"><h3>${title}</h3><p>${text}</p></article>`).join("")}
+          </section>
+        `;
+      }
+
+      function renderAssessment() {
+        const root = document.getElementById("assessment-view");
+        const report = state.answers.length === cases.length ? calculateReport(state.answers) : null;
+
+        if (!state.started) {
+          root.innerHTML = `
+            <div class="two-col">
+              <div>
+                <span class="eyebrow">5 case assessment</span>
+                <h1>Junior sales və support qərarvermə testi</h1>
+                <p>Demo real müştəri situasiyalarında seçim, izah və rubric feedback-i göstərir. Scoring deterministik mock-dur.</p>
+              </div>
+              <div class="start-panel">
+                <label>İştirakçı adı<input id="candidate-name" value="${state.name}" /></label>
+                <label>Rol<input id="candidate-role" value="${state.role}" /></label>
+                <button id="start-assessment">Assessment başlat</button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        if (report) {
+          const summary = `Sən ${skillLabels[report.strongest[0]].toLocaleLowerCase("az")} və ${skillLabels[report.strongest[1]].toLocaleLowerCase("az")} üzrə güclü siqnal göstərirsən, amma ${skillLabels[report.weakest[0]].toLocaleLowerCase("az")} və ${skillLabels[report.weakest[1]].toLocaleLowerCase("az")} üzrə daha strukturlaşdırılmış qərar verməlisən.`;
+          root.innerHTML = `
+            <div class="report-head">
+              <div><span class="eyebrow">Skill report</span><h2>${state.name}</h2><p>${summary}</p></div>
+              <div class="actions no-print"><button class="secondary" id="reset">Yenidən başlat</button><button onclick="window.print()">PDF export</button></div>
+            </div>
+            <div class="section report-grid">
+              <article class="panel">
+                <h2>Bacarıq nəticələri</h2>
+                <div class="score-list">
+                  ${skillKeys.map((key) => `<div class="score-row"><div><strong>${skillLabels[key]}</strong><span>${report.scores[key]}/100</span></div>${scorebar(report.scores[key])}</div>`).join("")}
+                </div>
+              </article>
+              <article class="panel">
+                <h2>Manager interpretation</h2>
+                <ul class="insights">
+                  <li><strong>Güclü sahələr</strong><br />${report.strongest.map((key) => skillLabels[key]).join(", ")}</li>
+                  <li><strong>İnkişaf riski</strong><br />${report.weakest.map((key) => skillLabels[key]).join(", ")}</li>
+                  <li><strong>Tövsiyə</strong><br />Nəticə role-play interview və 1 həftəlik shadowing ilə birlikdə qiymətləndirilməlidir.</li>
+                </ul>
+              </article>
+            </div>
+            <article class="section panel">
+              <h2>Case feedback</h2>
+              <div class="feedback-grid">
+                ${report.feedback.map((item) => `<div class="feedback-card"><span>${item.caseTitle}</span><strong>${item.selectedLabel}</strong><p>${item.feedback}</p><small>${item.reasonSignal}</small></div>`).join("")}
+              </div>
+            </article>
+          `;
+          localStorage.setItem(
+            "decisionlab:lastReport",
+            JSON.stringify({
+              name: state.name,
+              role: state.role,
+              completedAt: new Date().toLocaleString("az-AZ"),
+              scores: report.scores
+            })
+          );
+          return;
+        }
+
+        const item = cases[state.step];
+        root.innerHTML = `
+          <div class="assessment">
+            <aside class="rail">
+              <span class="eyebrow">Assessment</span>
+              <h2>Case ${state.step + 1}/${cases.length}</h2>
+              ${scorebar(Math.round(((state.step + 1) / cases.length) * 100))}
+              <div class="participant"><strong>${state.name}</strong><br /><span>${state.role}</span></div>
+              <ol>${cases.map((entry, index) => `<li class="${index === state.step ? "active" : ""}">${entry.title}</li>`).join("")}</ol>
+            </aside>
+            <section class="case-card">
+              <div class="case-meta"><span>${item.role}</span><span>${item.success}</span></div>
+              <h2>${item.title}</h2>
+              <p>${item.context}</p>
+              <div class="tension"><strong>Qərar gərginliyi</strong><br /><span>${item.tension}</span></div>
+              <div class="options">
+                ${item.options.map((option) => `<button class="option ${state.selected === option.id ? "selected" : ""}" data-option="${option.id}"><strong>${option.label}</strong><br /><small>${option.description}</small></button>`).join("")}
+              </div>
+              <label>Niyə bu qərarı verdin?
+                <textarea id="reason" rows="5" placeholder="Qısa izah yaz: hansı faktı, müştəri hissini, riski və növbəti addımı nəzərə aldın?">${state.reason}</textarea>
+              </label>
+              <button id="submit-answer" ${!state.selected || state.reason.trim().length < 12 ? "disabled" : ""}>Cavabı təsdiqlə</button>
+            </section>
+          </div>
+        `;
+      }
+
+      function renderAdmin() {
+        let latest = null;
+        try {
+          latest = JSON.parse(localStorage.getItem("decisionlab:lastReport"));
+        } catch (error) {
+          latest = null;
+        }
+        const candidates = latest && latest.scores ? [latest, ...mockCandidates] : mockCandidates;
+        const skillAverages = Object.fromEntries(skillKeys.map((key) => [key, average(candidates.map((item) => item.scores[key]))]));
+        const ranked = [...candidates].sort((a, b) => candidateAverage(b) - candidateAverage(a));
+        const weakest = [...skillKeys].sort((a, b) => skillAverages[a] - skillAverages[b]).slice(0, 3);
+        const strongest = [...skillKeys].sort((a, b) => skillAverages[b] - skillAverages[a]).slice(0, 3);
+        const cohortAverage = average(candidates.map(candidateAverage));
+
+        document.getElementById("admin-view").innerHTML = `
+          <div class="admin-head">
+            <div>
+              <span class="eyebrow">Manager dashboard</span>
+              <h2>DecisionLab pilot cohort</h2>
+              <p>Mock data ilə işləyir. Assessment tamamlananda son nəticə cohort sıralamasına əlavə olunur.</p>
+            </div>
+            <button class="no-print" onclick="window.print()">PDF export</button>
+          </div>
+          <div class="section metrics">
+            <article class="metric"><span>Tamamlayan iştirakçı</span><h2>${candidates.length}</h2><small>Mock cohort + son local nəticə</small></article>
+            <article class="metric"><span>Ortalama skill score</span><h2>${cohortAverage}/100</h2><small>7 bacarıq üzrə ümumi orta</small></article>
+            <article class="metric"><span>Ən zəif bacarıq</span><h2>${skillLabels[weakest[0]]}</h2><small>${skillAverages[weakest[0]]}/100 cohort average</small></article>
+            <article class="metric"><span>Ən güclü iştirakçı</span><h2>${ranked[0].name}</h2><small>${candidateAverage(ranked[0])}/100 overall</small></article>
+          </div>
+          <div class="section admin-grid">
+            <article class="panel">
+              <h2>Skill averages</h2>
+              <div class="score-list">
+                ${skillKeys.map((key) => `<div class="score-row"><div><strong>${skillLabels[key]}</strong><span>${skillAverages[key]}/100</span></div>${scorebar(skillAverages[key])}</div>`).join("")}
+              </div>
+            </article>
+            <article class="panel">
+              <h2>Manager insight</h2>
+              <ul class="insights">
+                <li><strong>Ən zəif bacarıqlar</strong><br />${weakest.map((key) => skillLabels[key]).join(", ")}</li>
+                <li><strong>Ən güclü bacarıqlar</strong><br />${strongest.map((key) => skillLabels[key]).join(", ")}</li>
+                <li><strong>Pilot qərarı</strong><br />Scale mərhələsində company benchmark, role threshold və training recommendation əlavə olunmalıdır.</li>
+              </ul>
+            </article>
+          </div>
+          <article class="section panel">
+            <h2>İştirakçı sıralaması</h2>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>İştirakçı</th><th>Rol</th><th>Completed</th><th>Overall</th><th>Customer empathy</th><th>Commercial thinking</th><th>Risk awareness</th></tr></thead>
+                <tbody>
+                  ${ranked.map((item) => `<tr><td>${item.name}</td><td>${item.role}</td><td>${item.completedAt}</td><td><strong>${candidateAverage(item)}/100</strong></td><td>${item.scores.customerEmpathy}/100</td><td>${item.scores.commercialThinking}/100</td><td>${item.scores.riskAwareness}/100</td></tr>`).join("")}
+                </tbody>
+              </table>
+            </div>
+          </article>
+        `;
+      }
+
+      function render() {
+        renderOverview();
+        renderAssessment();
+        renderAdmin();
+      }
+
+      document.addEventListener("click", (event) => {
+        const viewButton = event.target.closest("[data-view]");
+        if (viewButton) setView(viewButton.dataset.view);
+
+        const option = event.target.closest("[data-option]");
+        if (option) {
+          state.selected = option.dataset.option;
+          state.reason = document.getElementById("reason")?.value || state.reason;
+          renderAssessment();
+        }
+
+        if (event.target.id === "start-assessment") {
+          state.name = document.getElementById("candidate-name").value || "Demo namizəd";
+          state.role = document.getElementById("candidate-role").value || "Junior support / sales";
+          state.started = true;
+          state.step = 0;
+          state.answers = [];
+          state.selected = "";
+          state.reason = "";
+          renderAssessment();
+        }
+
+        if (event.target.id === "submit-answer") {
+          state.answers.push({
+            caseId: cases[state.step].id,
+            optionId: state.selected,
+            reason: state.reason
+          });
+          state.step += 1;
+          state.selected = "";
+          state.reason = "";
+          renderAssessment();
+        }
+
+        if (event.target.id === "reset") {
+          state.started = false;
+          state.step = 0;
+          state.answers = [];
+          state.selected = "";
+          state.reason = "";
+          renderAssessment();
+        }
+      });
+
+      document.addEventListener("input", (event) => {
+        if (event.target.id === "reason") {
+          state.reason = event.target.value;
+          const submit = document.getElementById("submit-answer");
+          if (submit) submit.disabled = !state.selected || state.reason.trim().length < 12;
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>
