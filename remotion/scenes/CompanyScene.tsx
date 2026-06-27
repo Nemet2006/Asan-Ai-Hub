@@ -1,6 +1,6 @@
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {brand} from "../config";
-import {DashboardFrame, GlassCard, Pill, SceneFrame} from "../components/Layout";
+import {CursorPointer, DashboardFrame, GlassCard, Pill, SceneFrame} from "../components/Layout";
 import type {SceneProps} from "./types";
 
 const candidates = [
@@ -30,6 +30,7 @@ export const CompanyScene = ({aspect, scene}: SceneProps) => {
             gridTemplateColumns: isVertical ? "1fr" : "1.1fr 0.9fr",
             gap: 26,
             height: "100%",
+            position: "relative",
           }}
         >
           <GlassCard style={{padding: 26, boxShadow: "none"}}>
@@ -118,6 +119,7 @@ export const CompanyScene = ({aspect, scene}: SceneProps) => {
               Invite top candidates
             </div>
           </GlassCard>
+          <CursorPointer x={isVertical ? 720 : 870} y={isVertical ? 805 : 505} scale={isVertical ? 1.1 : 0.95} />
         </div>
       </DashboardFrame>
     </SceneFrame>

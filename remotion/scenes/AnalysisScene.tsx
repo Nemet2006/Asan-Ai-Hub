@@ -1,6 +1,6 @@
 import {interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {brand} from "../config";
-import {DashboardFrame, GlassCard, Pill, SceneFrame} from "../components/Layout";
+import {CursorPointer, DashboardFrame, GlassCard, Pill, SceneFrame} from "../components/Layout";
 import type {SceneProps} from "./types";
 
 const metrics = [
@@ -28,6 +28,7 @@ export const AnalysisScene = ({aspect, scene}: SceneProps) => {
             gridTemplateColumns: isVertical ? "1fr" : "1fr 0.86fr",
             gap: 26,
             height: "100%",
+            position: "relative",
           }}
         >
           <GlassCard style={{padding: 28, boxShadow: "none"}}>
@@ -114,6 +115,7 @@ export const AnalysisScene = ({aspect, scene}: SceneProps) => {
               Recommended for junior analyst shortlist. Needs more evidence on SQL depth.
             </div>
           </GlassCard>
+          <CursorPointer x={isVertical ? 720 : 900} y={isVertical ? 570 : 410} scale={isVertical ? 1.1 : 0.95} />
         </div>
       </DashboardFrame>
     </SceneFrame>

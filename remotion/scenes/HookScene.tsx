@@ -1,6 +1,6 @@
 import {Easing, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {brand} from "../config";
-import {GlassCard, SceneFrame, useSceneMotion} from "../components/Layout";
+import {CursorPointer, GlassCard, SceneFrame, useSceneMotion} from "../components/Layout";
 import type {SceneProps} from "./types";
 
 const candidates = [
@@ -126,6 +126,7 @@ export const HookScene = ({aspect, scene}: SceneProps) => {
             </GlassCard>
           );
         })}
+        <CursorPointer x={isVertical ? 560 : 780} y={isVertical ? 640 : 430} scale={isVertical ? 1.15 : 1} />
       </div>
     </SceneFrame>
   );

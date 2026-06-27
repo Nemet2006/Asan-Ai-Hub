@@ -52,16 +52,22 @@ export const BackgroundGrid: FC = () => {
     <AbsoluteFill
       style={{
         background:
-          "radial-gradient(circle at 18% 20%, rgba(37,99,235,0.16), transparent 28%), radial-gradient(circle at 84% 22%, rgba(6,182,212,0.14), transparent 24%), linear-gradient(135deg, #F8FAFC 0%, #EEF5FF 48%, #FFFFFF 100%)",
+          "radial-gradient(circle at 12% 24%, rgba(124,58,237,0.62), transparent 24%), radial-gradient(circle at 82% 18%, rgba(6,182,212,0.36), transparent 24%), radial-gradient(circle at 62% 84%, rgba(37,99,235,0.36), transparent 28%), linear-gradient(135deg, #050711 0%, #0B1020 46%, #180719 100%)",
       }}
     >
       <AbsoluteFill
         style={{
-          opacity: 0.34,
+          opacity: 0.2,
           backgroundImage:
-            "linear-gradient(rgba(15,23,42,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.07) 1px, transparent 1px)",
+            "linear-gradient(rgba(255,255,255,0.13) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
           transform: `translate(${drift * -0.18}px, ${drift * -0.1}px)`,
+        }}
+      />
+      <AbsoluteFill
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 38%, rgba(0,0,0,0.72) 100%)",
         }}
       />
     </AbsoluteFill>
@@ -76,8 +82,8 @@ export const SceneFrame: FC<{
 }> = ({aspect, scene, children, tone = "light"}) => {
   const {enter, exit} = useSceneMotion(scene.duration);
   const isVertical = aspect === "vertical";
-  const color = tone === "dark" ? brand.colors.white : brand.colors.ink;
-  const textWidth = isVertical ? "86%" : "44%";
+  const color = brand.colors.white;
+  const textWidth = isVertical ? "86%" : "39%";
 
   return (
     <AbsoluteFill
@@ -99,16 +105,17 @@ export const SceneFrame: FC<{
         }}
       >
         <div style={{alignSelf: isVertical ? "start" : "center"}}>
-          <BrandLockup dark={tone === "dark"} />
+          <BrandLockup dark />
           <Kicker>{scene.kicker}</Kicker>
           <h1
             style={{
               margin: "22px 0 0",
-              maxWidth: isVertical ? 840 : 760,
-              fontSize: isVertical ? 72 : 68,
+              maxWidth: isVertical ? 840 : 700,
+              fontSize: isVertical ? 70 : 62,
               lineHeight: 1.02,
               letterSpacing: 0,
               fontWeight: 820,
+              textShadow: "0 24px 80px rgba(0,0,0,0.72)",
             }}
           >
             {scene.title}
@@ -171,9 +178,10 @@ export const Kicker: FC<{children: ReactNode}> = ({children}) => (
       marginTop: 44,
       padding: "13px 18px",
       borderRadius: 999,
-      color: brand.colors.blue,
-      background: "rgba(37,99,235,0.1)",
-      border: "1px solid rgba(37,99,235,0.18)",
+      color: "#DFFBFF",
+      background: "rgba(6,182,212,0.14)",
+      border: "1px solid rgba(103,232,249,0.34)",
+      boxShadow: "0 0 42px rgba(6,182,212,0.18)",
       fontSize: 26,
       lineHeight: 1,
       fontWeight: 760,
@@ -192,8 +200,10 @@ export const GlassCard: FC<{
     style={{
       borderRadius: 8,
       border: dark ? "1px solid rgba(255,255,255,0.16)" : `1px solid ${brand.colors.line}`,
-      background: dark ? "rgba(15,23,42,0.76)" : "rgba(255,255,255,0.82)",
-      boxShadow: dark ? "0 28px 80px rgba(0,0,0,0.28)" : "0 28px 80px rgba(15,23,42,0.12)",
+      background: dark ? "rgba(15,23,42,0.76)" : "rgba(255,255,255,0.94)",
+      boxShadow: dark
+        ? "0 32px 110px rgba(0,0,0,0.42), 0 0 80px rgba(124,58,237,0.18)"
+        : "0 38px 120px rgba(0,0,0,0.42), 0 0 90px rgba(124,58,237,0.22)",
       backdropFilter: "blur(22px)",
       ...style,
     }}
@@ -237,30 +247,114 @@ export const DashboardFrame: FC<{
     dark={dark}
     style={{
       height: aspect === "vertical" ? "100%" : "78%",
-      padding: aspect === "vertical" ? 30 : 34,
+      padding: 0,
       overflow: "hidden",
+      transform:
+        aspect === "vertical"
+          ? "perspective(1800px) rotateX(4deg)"
+          : "perspective(1800px) rotateX(7deg) rotateY(-8deg) rotateZ(1deg)",
+      transformOrigin: "center center",
       ...style,
     }}
   >
-    <div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        height: aspect === "vertical" ? 74 : 66,
+        padding: aspect === "vertical" ? "0 28px" : "0 30px",
+        borderBottom: dark ? "1px solid rgba(255,255,255,0.13)" : "1px solid #E2E8F0",
+        background: dark ? "rgba(15,23,42,0.82)" : "rgba(248,250,252,0.98)",
+      }}
+    >
+      <div style={{display: "flex", gap: 10}}>
+        {["#EF4444", "#F59E0B", "#22C55E"].map((color) => (
+          <div key={color} style={{width: 14, height: 14, borderRadius: 14, background: color}} />
+        ))}
+      </div>
       <div
         style={{
           fontSize: aspect === "vertical" ? 26 : 24,
           fontWeight: 800,
           color: dark ? brand.colors.white : brand.colors.ink,
+          background: dark ? "rgba(255,255,255,0.07)" : "#FFFFFF",
+          border: dark ? "1px solid rgba(255,255,255,0.12)" : "1px solid #E2E8F0",
+          borderRadius: 8,
+          padding: "10px 18px",
+          minWidth: aspect === "vertical" ? 360 : 420,
+          textAlign: "center",
         }}
       >
         {title}
       </div>
-      <div style={{display: "flex", gap: 10}}>
-        {["#E11D48", "#F59E0B", "#16A34A"].map((color) => (
-          <div key={color} style={{width: 14, height: 14, borderRadius: 14, background: color}} />
-        ))}
-      </div>
+      <div
+        style={{
+          width: 118,
+          height: 34,
+          borderRadius: 999,
+          background: dark ? "rgba(255,255,255,0.08)" : "#E2E8F0",
+        }}
+      />
     </div>
-    <div style={{marginTop: 28, height: "calc(100% - 60px)"}}>{children}</div>
+    <div
+      style={{
+        padding: aspect === "vertical" ? 30 : 34,
+        height: `calc(100% - ${aspect === "vertical" ? 74 : 66}px)`,
+      }}
+    >
+      <div style={{height: "100%"}}>{children}</div>
+    </div>
   </GlassCard>
 );
+
+export const CursorPointer: FC<{x: number; y: number; scale?: number}> = ({
+  x,
+  y,
+  scale = 1,
+}) => {
+  const frame = useCurrentFrame();
+  const pulse = interpolate(Math.sin(frame / 8), [-1, 1], [0.92, 1.06]);
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        width: 72 * scale,
+        height: 72 * scale,
+        transform: `scale(${pulse}) rotate(-12deg)`,
+        filter: "drop-shadow(0 18px 26px rgba(0,0,0,0.32))",
+        zIndex: 20,
+      }}
+    >
+      <svg viewBox="0 0 80 80" width="100%" height="100%">
+        <path
+          d="M18 8L62 48L43 51L35 70L18 8Z"
+          fill="#FFFFFF"
+          stroke="#111827"
+          strokeLinejoin="round"
+          strokeWidth="5"
+        />
+        <path d="M42 50L54 68" stroke="#111827" strokeLinecap="round" strokeWidth="5" />
+      </svg>
+      <div
+        style={{
+          position: "absolute",
+          left: 34 * scale,
+          top: 34 * scale,
+          width: 80 * scale,
+          height: 80 * scale,
+          borderRadius: 999,
+          border: "2px solid rgba(103,232,249,0.7)",
+          opacity: 0.5,
+          transform: "translate(-50%, -50%)",
+        }}
+      />
+    </div>
+  );
+};
 
 export const SceneProgress: FC = () => {
   const frame = useCurrentFrame();

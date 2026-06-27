@@ -1,6 +1,6 @@
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from "remotion";
 import {brand} from "../config";
-import {BrandLockup, DashboardFrame, GlassCard, SceneFrame} from "../components/Layout";
+import {BrandLockup, CursorPointer, DashboardFrame, GlassCard, SceneFrame} from "../components/Layout";
 import type {SceneProps} from "./types";
 
 export const SolutionScene = ({aspect, scene}: SceneProps) => {
@@ -23,7 +23,11 @@ export const SolutionScene = ({aspect, scene}: SceneProps) => {
             dark
             style={{
               height: isVertical ? 940 : 660,
-              transform: `scale(${0.86 + open * 0.14})`,
+              transform: isVertical
+                ? `perspective(1800px) rotateX(4deg) scale(${0.86 + open * 0.14})`
+                : `perspective(1800px) rotateX(7deg) rotateY(-8deg) rotateZ(1deg) scale(${
+                    0.86 + open * 0.14
+                  })`,
               opacity: open,
             }}
           >
@@ -33,6 +37,7 @@ export const SolutionScene = ({aspect, scene}: SceneProps) => {
                 gridTemplateColumns: isVertical ? "1fr" : "1.1fr 0.9fr",
                 gap: 24,
                 height: "100%",
+                position: "relative",
               }}
             >
               <GlassCard dark style={{padding: 28, boxShadow: "none"}}>
@@ -115,6 +120,7 @@ export const SolutionScene = ({aspect, scene}: SceneProps) => {
                   ))}
                 </div>
               </GlassCard>
+              <CursorPointer x={isVertical ? 690 : 780} y={isVertical ? 560 : 420} scale={isVertical ? 1.1 : 0.95} />
             </div>
           </DashboardFrame>
         </div>
